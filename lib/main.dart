@@ -5,8 +5,11 @@ import 'package:latihan_1/Expanded/KartuDashboard.dart';
 import 'package:latihan_1/Expanded/LatihanLayout.dart';
 import 'package:latihan_1/Expanded/LayoutDua.dart';
 import 'package:latihan_1/Expanded/LayoutSatu.dart';
+import 'package:latihan_1/GridView/GridViewBasic.dart';
 import 'package:latihan_1/GridView/GridViewBuilder.dart';
 import 'package:latihan_1/GridView/GridViewCount.dart';
+import 'package:latihan_1/GridView/GridViewScreen.dart';
+import 'package:latihan_1/GridView/LatihanGrid.dart';
 import 'package:latihan_1/ListView/ListView.dart';
 import 'package:latihan_1/ListView/ListViewBuilder.dart';
 import 'package:latihan_1/ListView/ListViewCustom.dart';
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
         //   centerTitle: true,
         // ),
         body:
-            GridViewCount(),
+            SocialFeedPage(),
       ),
     );
   }
