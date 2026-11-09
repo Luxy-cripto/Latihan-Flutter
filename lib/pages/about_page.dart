@@ -18,7 +18,6 @@ class AbouPage extends StatelessWidget {
               const Text('Halaman Page'),
               const SizedBox(height: 16),
 
-              // === TOMBOL PINTASAN KE LATIHAN GRID ===
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.indigo,
@@ -31,6 +30,14 @@ class AbouPage extends StatelessWidget {
                 },
                 icon: const Icon(Icons.grid_view),
                 label: const Text('Buka Latihan Grid (Instan)'),
+              ),
+              const SizedBox(height: 16),
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.inputForm);
+                },
+                child: const Text('Buat Data Formulir'),
               ),
               const SizedBox(height: 16),
 

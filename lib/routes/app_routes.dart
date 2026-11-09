@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:latihan_1/pages/about_page.dart';
 import 'package:latihan_1/pages/formulir_page.dart';
 import 'package:latihan_1/pages/home_page.dart';
+import 'package:latihan_1/pages/input_page.dart';
+import 'package:latihan_1/pages/output_page.dart';
 import 'package:latihan_1/GridView/LatihanGrid.dart' as grid_file;
 
 class AppRoutes {
@@ -10,6 +12,10 @@ class AppRoutes {
   static const about = '/about';
   static const latihanGrid = '/latihan-grid';
   static const formulir = '/formulir';
+  static const inputForm = '/input-form';
+  static const outputForm = '/output-form';
+
+
 
   // Daftar rute beserta widget tujuannya
   static Map<String, WidgetBuilder> routes = {
@@ -17,5 +23,8 @@ class AppRoutes {
     about: (context) => AbouPage(),
     latihanGrid: (context) => grid_file.SocialFeedPage(),
     formulir:(context) => FormulirPage(),
+    inputForm: (context) => BelajarForm(),
+    
+
   };
 }
