@@ -13,7 +13,13 @@ class OutputFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Output Formulir'),
+      ),
+      body:
+    
+    SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Card(
@@ -37,8 +43,11 @@ class OutputFormScreen extends StatelessWidget {
           ),
         ),
       ),
+    )
     );
+    
   }
+
 
   Widget _textWidget(String label, String value) {
     return Padding(
