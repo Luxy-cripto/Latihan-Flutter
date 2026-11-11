@@ -3,8 +3,11 @@ import 'package:latihan_1/pages/about_page.dart';
 import 'package:latihan_1/pages/formulir_page.dart';
 import 'package:latihan_1/pages/home_page.dart';
 import 'package:latihan_1/pages/input_page.dart';
+import 'package:latihan_1/form/TokoElektronik.dart';
+import 'package:latihan_1/form/TokoElektronik/electronics_store_app.dart' as electronics;
 import 'package:latihan_1/pages/output_page.dart';
 import 'package:latihan_1/GridView/LatihanGrid.dart' as grid_file;
+import 'package:latihan_1/form/TokoElektronik.dart' as tokoElektronikLegacy;
 
 class AppRoutes {
   // Path rute aplikasi
@@ -14,17 +17,18 @@ class AppRoutes {
   static const formulir = '/formulir';
   static const inputForm = '/input-form';
   static const outputForm = '/output-form';
+  static const tokoElektronik = '/toko-elektronik';
 
 
 
   // Daftar rute beserta widget tujuannya
   static Map<String, WidgetBuilder> routes = {
     home: (context) => HomePage(),
-    about: (context) => AbouPage(),
+    about: (context) => AboutPage(),
     latihanGrid: (context) => grid_file.SocialFeedPage(),
     formulir:(context) => FormulirPage(),
     inputForm: (context) => BelajarForm(),
-    
+    tokoElektronik: (context) => const electronics.ElectronicsStoreApp(),
 
   };
 }
