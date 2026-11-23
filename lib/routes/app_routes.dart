@@ -3,6 +3,9 @@ import 'package:latihan_1/pages/about_page.dart';
 import 'package:latihan_1/pages/formulir_page.dart';
 import 'package:latihan_1/pages/home_page.dart';
 import 'package:latihan_1/pages/input_page.dart';
+import 'package:latihan_1/pages/album_page.dart';
+import 'package:latihan_1/pages/post_page.dart';
+import 'package:latihan_1/pages/user_page.dart';
 import 'package:latihan_1/form/TokoElektronik.dart';
 import 'package:latihan_1/form/TokoElektronik/electronics_store_app.dart' as electronics;
 import 'package:latihan_1/pages/output_page.dart';
@@ -18,6 +21,9 @@ class AppRoutes {
   static const inputForm = '/input-form';
   static const outputForm = '/output-form';
   static const tokoElektronik = '/toko-elektronik';
+  static const albumPage = '/album-page';
+  static const postPage = '/post-page';
+  static const userPage = '/user-page';
 
 
 
@@ -29,6 +35,8 @@ class AppRoutes {
     formulir:(context) => FormulirPage(),
     inputForm: (context) => BelajarForm(),
     tokoElektronik: (context) => const electronics.ElectronicsStoreApp(),
-
+    albumPage: (context) => const AlbumPage(),
+    postPage: (context) => const PostPage(),
+    userPage: (context) => const UserPage(),
   };
 }
