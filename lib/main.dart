@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_1/routes/app_routes.dart';
+import 'package:latihan_1/services/auth_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final token = await AuthService().getToken();
+  runApp(MyApp(isLoggedIn: token != null));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Flutter Pertamaku",
+      title: 'Flutter Latihan 1',
       debugShowCheckedModeBanner: false,
-      
-      // Tentukan halaman pertama yang ingin dibuka saat aplikasi dimuat
-      initialRoute: AppRoutes.home, 
-      
+      initialRoute: isLoggedIn ? AppRoutes.home : AppRoutes.login,
       routes: AppRoutes.routes,
     );
   }

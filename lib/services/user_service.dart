@@ -9,7 +9,7 @@ import '../models/user.dart';
 class ApiService {
   Future<List<User>> fetchUsers() async {
     final url = Uri.parse(
-      '${ApiConstants.baseUrl}${ApiConstants.usersEndpoint}',
+      '${ApiConstant.baseUrl}/users',
     );
 
     try {

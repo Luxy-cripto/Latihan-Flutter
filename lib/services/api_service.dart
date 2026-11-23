@@ -3,8 +3,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../constants/api_constants.dart';
 import '../models/post.dart';
+
+class ApiConstants {
+  static const baseUrl = 'https://jsonplaceholder.typicode.com';
+  static const postsEndpoint = '/posts';
+}
 
 class ApiService {
   Future<List<Post>> fetchPosts() async {

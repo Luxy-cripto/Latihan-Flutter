@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:latihan_1/pages/about_page.dart';
+import '../models/user_model.dart';
+import '../services/auth_service.dart';
+import 'login_page.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomesPage extends StatefulWidget {
+  const HomesPage({super.key});
+
+  @override
+  State<HomesPage> createState() => _HomesPageState();
+}
+
+class _HomesPageState extends State<HomesPage> {
+  final _auth = AuthService();
+  late Future<UserModel> _futureUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureUser = _auth.getUser();
+  }
+
+  Future<void> _logout() async {
+    await _auth.logout();
+    if (!mounted) return;
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (_) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 1. Set background Scaffold agar tidak kembali ke putih
       backgroundColor: const Color(0xFF0F172A),
       body: Container(
-        // 2. Paksa Container memenuhi seluruh layar
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
@@ -36,52 +61,66 @@ class HomePage extends StatelessWidget {
                 child: Center(
                   child: SizedBox(
                     width: contentWidth,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Top Navigation / Header Status
-                        _buildTopBar(),
-                        const SizedBox(height: 24),
-
-                        // Hero Banner Welcome
-                        _buildHeroBanner(),
-                        const SizedBox(height: 28),
-
-                        // Section Title
-                        const Text(
-                          'Navigasi Utama 🎯',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-
-                        // Tombol Utama ke Halaman About
-                        _buildActionCard(
-                          context,
-                          title: 'Galeri Tugas & Modul',
-                          subtitle: 'Buka koleksi widget, grid, toko, & form',
-                          icon: Icons.widgets_rounded,
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const AboutPage(),
+                    child: FutureBuilder<UserModel>(
+                      future: _futureUser,
+                      builder: (context, snap) {
+                        if (snap.connectionState == ConnectionState.waiting) {
+                          return SizedBox(
+                            height: constraints.maxHeight - 40,
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xFF6366F1),
                               ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 14),
+                            ),
+                          );
+                        }
 
-                        // Card Info Tambahan
-                        _buildInfoCard(),
-                      ],
+                        if (snap.hasError) {
+                          return _buildErrorState(snap.error.toString());
+                        }
+
+                        final user = snap.data!;
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _buildTopBar(),
+                            const SizedBox(height: 24),
+                            _buildHeroBanner(user),
+                            const SizedBox(height: 28),
+                            const Text(
+                              'Navigasi Utama 🎯',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                            _buildActionCard(
+                              context,
+                              title: 'Galeri Tugas & Modul',
+                              subtitle:
+                                  'Buka koleksi widget, grid, toko, & form',
+                              icon: Icons.widgets_rounded,
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const AboutPage(),
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 14),
+                            _buildInfoCard(user),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -119,24 +158,42 @@ class HomePage extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.08),
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white.withOpacity(0.1)),
-          ),
-          child: const Icon(
-            Icons.explore_rounded,
-            color: Color(0xFF6366F1),
-            size: 24,
-          ),
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.08),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
+              ),
+              child: const Icon(
+                Icons.explore_rounded,
+                color: Color(0xFF6366F1),
+                size: 22,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Material(
+              color: Colors.redAccent.withOpacity(0.14),
+              shape: const CircleBorder(),
+              child: IconButton(
+                onPressed: _logout,
+                tooltip: 'Logout',
+                icon: const Icon(
+                  Icons.logout_rounded,
+                  color: Colors.redAccent,
+                  size: 20,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildHeroBanner() {
+  Widget _buildHeroBanner(UserModel user) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -174,14 +231,23 @@ class HomePage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Selamat Datang 🚀',
-            style: TextStyle(
+            'Halo, ${user.name} 🚀',
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 22,
               fontWeight: FontWeight.w800,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
+          Text(
+            user.email,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
           const Text(
             'Aplikasi eksperimen UI & latihan modul Flutter. Tekan tombol navigasi di bawah untuk mulai menjelajah.',
             style: TextStyle(
@@ -271,7 +337,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard() {
+  Widget _buildInfoCard(UserModel user) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -282,23 +348,65 @@ class HomePage extends StatelessWidget {
         ),
       ),
       child: Row(
-        children: const [
-          Icon(
-            Icons.auto_awesome_rounded,
+        children: [
+          const Icon(
+            Icons.verified_user_rounded,
             color: Color(0xFF94A3B8),
             size: 22,
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Sudah terintegrasi dengan tema Dark Slate & Neon Gradient.',
-              style: TextStyle(
+              'Login aktif sebagai ${user.name} (${user.email}) • Tema Dark Slate & Neon Gradient.',
+              style: const TextStyle(
                 color: Color(0xFF94A3B8),
                 fontSize: 12,
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState(String message) {
+    return SizedBox(
+      height: 360,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.error_outline_rounded,
+                color: Colors.redAccent,
+                size: 36,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: _logout,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6366F1),
+                  foregroundColor: Colors.white,
+                ),
+                icon: const Icon(Icons.login_rounded, size: 18),
+                label: const Text('Kembali ke Login'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
